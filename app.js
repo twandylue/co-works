@@ -18,6 +18,7 @@ app.use(express.urlencoded({extended:true}));
 
 // CORS allow all
 app.use(cors());
+// test
 
 // API routes
 app.use('/api/' + API_VERSION,
