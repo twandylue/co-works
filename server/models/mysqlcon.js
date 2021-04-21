@@ -27,6 +27,7 @@ const mysqlConfig = {
 };
 
 const mysqlCon = mysql.createConnection(mysqlConfig[env], {multipleStatements});
+
 const promiseQuery = promisify(mysqlCon.query).bind(mysqlCon);
 const promiseTransaction = promisify(mysqlCon.beginTransaction).bind(mysqlCon);
 const promiseCommit = promisify(mysqlCon.commit).bind(mysqlCon);
