@@ -11,7 +11,7 @@ parserOptions:
   ecmaVersion: 2018
 ignorePatterns: ["*.ejs"]
 rules:
-  no-console: off
+  no-console: warn
   no-unused-vars: ["error", { "vars": "all", "args": "none"}]
   linebreak-style: ["error", "unix"]
   quotes: ["error", "single"]
