@@ -69,6 +69,7 @@ const getProducts = async (req, res) => {
         return Promise.resolve({});
     }
     const {products, productCount} = await findProduct(category);
+    // console.log(products[0].rating);
     if (!products) {
         res.status(400).send({error:'Wrong Request'});
         return;
@@ -96,6 +97,13 @@ const getProducts = async (req, res) => {
         data: productsWithDetail,
     };
 
+    if (category == 'details') {
+        result.data.rating = products[0].rating;
+    } else {
+        for (const i in products) {
+            result.data[i].rating = products[i].rating;
+        }
+    }
     res.status(200).json(result);
 };
 

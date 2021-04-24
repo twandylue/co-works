@@ -29,7 +29,12 @@ app.use('/api/' + API_VERSION,
         require('./server/routes/marketing_route'),
         require('./server/routes/user_route'),
         require('./server/routes/order_route'),
-        require('./server/routes/test_route') // for test
+        require('./server/routes/test_route'), // for test
+        require('./server/routes/updateMySQL_route'), // for update crawler data to mySQL
+        require('./server/routes/profile_route'), // for user profileInfo
+        require('./server/routes/cart_route'), // for cart
+        require('./server/routes/collection_route'), // for collection
+        require('./server/routes/rating_route') // fot rating
     ]
 );
 
