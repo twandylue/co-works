@@ -42,6 +42,7 @@ const createProduct = async (req, res) => {
 const getProducts = async (req, res) => {
     const category = req.params.category;
     const paging = parseInt(req.query.paging) || 0;
+    const collectionList = req.collectionList;
 
     async function findProduct(category) {
         switch (category) {
@@ -97,11 +98,25 @@ const getProducts = async (req, res) => {
         data: productsWithDetail,
     };
 
-    if (category == 'details') {
+    if (category == 'details') { // 有更有效率的寫法!?
         result.data.rating = products[0].rating;
+        for (const i in collectionList) {
+            if (collectionList[i].product_id === result.data.id) {
+                result.data.status = collectionList[i].status;
+            } else {
+                result.data.status = 0;
+            }
+        }
     } else {
-        for (const i in products) {
+        for (const i in products) { // 有更有效率的寫法!?
             result.data[i].rating = products[i].rating;
+            for (const j in collectionList) { // 有更有效率的寫法!?
+                if (collectionList[j].product_id === result.data[i].id) {
+                    result.data[i].status = collectionList[j].status;
+                } else {
+                    result.data[i].status = 0;
+                }
+            }
         }
     }
     res.status(200).json(result);
@@ -138,8 +153,19 @@ const getProductsWithDetail = async (protocol, hostname, products) => {
     });
 };
 
+const getCollection = async (req, res, next) => {
+    if (req.userType === 0) {
+        next();
+    } else if (req.userType === 1) {
+        const email = req.user.email;
+        req.collectionList = await Product.getProductCollection(email);
+        next();
+    }
+};
+
 module.exports = {
     createProduct,
     getProductsWithDetail,
     getProducts,
+    getCollection
 };

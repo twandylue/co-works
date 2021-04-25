@@ -3,27 +3,37 @@ const {query, transaction, commit, rollback} = require('./mysqlcon');
 
 const getCollection = async (email) => {
     try {
-        const result = await query('SELECT * FROM collection WHERE email = ?', [email]);
+        const result = await query('SELECT product_id, title, price, image, status FROM collection WHERE email = ?', [email]);
         return result;
     } catch (error) {
         return({error});
     }
 };
 
-const updateCollection = async (email, collections) => {
+const updateCollection = async (email, collectionItem) => {
     const result = {};
-    try {
-        await transaction();
-        result.delete = await query('DELETE FROM collection WHERE email = ?', [email]);
-        if (collections.length) {
-            result.insert = await query('INSERT INTO collection (email, title, product_id, price, image) VALUES ?', [collections]);
+    if (collectionItem.status === 1) {
+        try {
+            await transaction();
+            // result.delete = await query('DELETE FROM collection WHERE email = ?', [email]); // for insurance
+            const insertInfo = [email, collectionItem.title, collectionItem.product_id, collectionItem.price, collectionItem.image, collectionItem.status];
+            result.insert = await query('INSERT INTO collection (email, title, product_id, price, image, `status`) VALUES ?', [[insertInfo]]);
+            await commit();
+            result.status = 1;
+            return(result);
+        } catch (error) {
+            await rollback();
+            return {error};
         }
-        await commit();
-        return(result);
-    } catch (error) {
-        await rollback();
-        return {error};
+    } else if (collectionItem.status === 0) {
+        try {
+            result.delete = await query('DELETE FROM collection WHERE email = ? AND product_id = ?', [email, collectionItem.product_id]);
+            result.status = 1;
+        } catch (error) {
+            return {error};
+        }
     }
+    return(result);
 };
 
 module.exports = {

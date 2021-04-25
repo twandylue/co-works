@@ -20,16 +20,10 @@ const getCollectionInfo = async (req, res) => {
 };
 
 const updateCollecitonInfo = async (req, res) => {
-    const collectionList = req.body.data.collectionList;
+    const collectionItem = req.body.data.collectionList;
     const email = req.user.email;
-    const collections = [];
-    for (const i in collectionList) {
-        const collection = [];
-        collection.push(email, collectionList[i].title, collectionList[i].product_id, collectionList[i].price, collectionList[i].image);
-        collections.push(collection);
-    }
-    const result = await updateCollection(email, collections);
-    if (result) {
+    const result = await updateCollection(email, collectionItem[0]);
+    if (result.status === 1) {
         res.status(200).send({message: 'Update collection list sucesses!'});
         return;
     } else {
