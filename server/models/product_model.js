@@ -59,9 +59,15 @@ const getProductsVariants = async (productIds) => {
     return await query(queryStr, bindings);
 };
 
+const getProductCollection = async (email) => {
+    const collectionList = await query('SELECT * FROM collection WHERE email = ?', [email]);
+    return(collectionList);
+};
+
 module.exports = {
     createProduct,
     getProducts,
     getHotProducts,
-    getProductsVariants
+    getProductsVariants,
+    getProductCollection
 };
