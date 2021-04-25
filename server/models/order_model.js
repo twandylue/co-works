@@ -53,10 +53,28 @@ const getUserPaymentsGroupByDB = async () => {
     return orders;
 };
 
+const getOrderInfo = async(email) => {
+    try {
+        await transaction();
+        const userInfo = await query('SELECT id FROM user WHERE email = ?', [email]);
+        // console.log(userInfo[0].id);
+        // result.userOrderInfo = await query('SELECT * FROM order_table WHERE user_id = ?', [userInfo[0].id]);
+        const orderHistory = await query('SELECT * FROM order_table WHERE user_id = ?', [5]);
+        await commit();
+        const detail = JSON.parse(orderHistory[0].details);
+        // console.log(detail.list);
+        return(orderHistory);
+    } catch (error) {
+        await rollback();
+        return({error});
+    }
+};
+
 module.exports = {
     createOrder,
     createPayment,
     payOrderByPrime,
     getUserPayments,
     getUserPaymentsGroupByDB,
+    getOrderInfo
 };

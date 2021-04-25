@@ -15,7 +15,9 @@ const updateCollection = async (email, collections) => {
     try {
         await transaction();
         result.delete = await query('DELETE FROM collection WHERE email = ?', [email]);
-        result.insert = await query('INSERT INTO collection (email, title, product_id, price, image) VALUES ?', [collections]);
+        if (collections.length) {
+            result.insert = await query('INSERT INTO collection (email, title, product_id, price, image) VALUES ?', [collections]);
+        }
         await commit();
         return(result);
     } catch (error) {

@@ -15,7 +15,9 @@ const updateCart = async (email, products) => {
     try {
         await transaction();
         result.delete = await query('DELETE FROM cart WHERE email = ?', [email]);
-        result.insert = await query('INSERT INTO cart (email, product_id, title, size, color, price, image, qty, date) VALUES ?', [products]);
+        if (products.length) {
+            result.insert = await query('INSERT INTO cart (email, product_id, title, size, color, price, image, qty, date) VALUES ?', [products]);
+        }
         await commit();
         return(result);
     } catch(error) {

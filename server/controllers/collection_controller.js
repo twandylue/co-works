@@ -23,7 +23,6 @@ const updateCollecitonInfo = async (req, res) => {
     const collectionList = req.body.data.collectionList;
     const email = req.user.email;
     const collections = [];
-    // console.log(collectionList);
     for (const i in collectionList) {
         const collection = [];
         collection.push(email, collectionList[i].title, collectionList[i].product_id, collectionList[i].price, collectionList[i].image);

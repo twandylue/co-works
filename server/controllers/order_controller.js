@@ -40,6 +40,23 @@ const checkout = async (req, res) => {
     res.send({data: {number}});
 };
 
+const getOrderHistory = async (req, res) => {
+    const email = req.user.email;
+    const orderHistory = await Order.getOrderInfo(email);
+    const response = {
+        data: {
+            orderHistory
+        }
+    };
+    if(orderHistory) {
+        res.status(200).send(response);
+        return;
+    } else {
+        res.status(500).send({error: 'Database Query Error.'});
+        return;
+    }
+};
+
 // For Load Testing
 const getUserPayments = async (req, res) => {
     const orders = await Order.getUserPayments();
@@ -67,6 +84,7 @@ const getUserPaymentsGroupByDB = async (req, res) => {
 
 module.exports = {
     checkout,
+    getOrderHistory,
     getUserPayments,
     getUserPaymentsGroupByDB
 };
