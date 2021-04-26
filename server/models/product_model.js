@@ -14,14 +14,30 @@ const createProduct = async (product, variants) => {
 };
 
 const getProducts = async (pageSize, paging = 0, requirement = {}) => {
-    const condition = {sql: '', binding: []};
+    console.log(requirement);
+    const condition = {sql: '', binding: [], orderby: 'ORDER BY id'};
     if (requirement.category) {
         condition.sql = 'WHERE category = ?';
         condition.binding = [requirement.category];
+
     } else if (requirement.keyword != null) {
-        condition.sql = 'WHERE title LIKE ?';
-        condition.binding = [`%${requirement.keyword}%`];
-    } else if (requirement.id != null) {
+
+        if(requirement.filter != null){
+            if(requirement.filter === 'priceHToL'){
+                condition.orderby = 'ORDER BY `price` DESC ';
+            }else if(requirement.filter === 'priceLToH'){
+                condition.orderby = 'ORDER BY `price` ';
+            }
+            condition.sql = 'WHERE title LIKE ?';
+            condition.binding = [`%${requirement.keyword}%`];
+        }else {
+            condition.sql = 'WHERE title LIKE ?';
+            condition.binding = [`%${requirement.keyword}%`];
+        }
+
+
+
+    }  else if (requirement.id != null) {
         condition.sql = 'WHERE id = ?';
         condition.binding = [requirement.id];
     }
@@ -31,7 +47,7 @@ const getProducts = async (pageSize, paging = 0, requirement = {}) => {
         binding: [pageSize * paging, pageSize]
     };
 
-    const productQuery = 'SELECT * FROM product ' + condition.sql + ' ORDER BY id ' + limit.sql;
+    const productQuery = 'SELECT * FROM product ' + condition.sql + condition.orderby + limit.sql;
     const productBindings = condition.binding.concat(limit.binding);
     const products = await query(productQuery, productBindings);
 
@@ -59,9 +75,15 @@ const getProductsVariants = async (productIds) => {
     return await query(queryStr, bindings);
 };
 
+const getProductCollection = async (email) => {
+    const collectionList = await query('SELECT * FROM collection WHERE email = ?', [email]);
+    return(collectionList);
+};
+
 module.exports = {
     createProduct,
     getProducts,
     getHotProducts,
-    getProductsVariants
+    getProductsVariants,
+    getProductCollection
 };

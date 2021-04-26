@@ -33,6 +33,7 @@ const promiseTransaction = promisify(mysqlCon.beginTransaction).bind(mysqlCon);
 const promiseCommit = promisify(mysqlCon.commit).bind(mysqlCon);
 const promiseRollback = promisify(mysqlCon.rollback).bind(mysqlCon);
 const promiseEnd = promisify(mysqlCon.end).bind(mysqlCon);
+const Format = (mysqlCon.format).bind(mysqlCon);
 
 module.exports={
 	core: mysql,
@@ -41,4 +42,5 @@ module.exports={
     commit: promiseCommit,
     rollback: promiseRollback,
     end: promiseEnd,
+    format: Format
 };

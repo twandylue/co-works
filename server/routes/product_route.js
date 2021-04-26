@@ -1,11 +1,12 @@
 const router = require('express').Router();
-const {wrapAsync} = require('../../util/util');
+const {wrapAsync, getUserInfobyToken} = require('../../util/util');
 
 const {
     getProducts,
+    getCollection
 } = require('../controllers/product_controller');
 
 router.route('/products/:category')
-    .get(wrapAsync(getProducts));
+    .get(getUserInfobyToken(), wrapAsync(getCollection), wrapAsync(getProducts));
 
 module.exports = router;

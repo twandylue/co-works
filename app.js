@@ -18,6 +18,7 @@ app.use(express.urlencoded({extended:true}));
 
 // CORS allow all
 app.use(cors());
+// test
 
 // API routes
 app.use('/api/' + API_VERSION,
@@ -28,6 +29,11 @@ app.use('/api/' + API_VERSION,
         require('./server/routes/marketing_route'),
         require('./server/routes/user_route'),
         require('./server/routes/order_route'),
+        require('./server/routes/test_route'), // for test
+        require('./server/routes/updateMySQL_route'), // for update crawler data to mySQL
+        require('./server/routes/cart_route'), // for cart
+        require('./server/routes/collection_route'), // for collection
+        require('./server/routes/rating_route'), // fot
     ]
 );
 

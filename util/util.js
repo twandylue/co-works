@@ -85,9 +85,54 @@ const authentication = (roleId) => {
     };
 };
 
+const getUserInfobyToken = (roleId) => {
+    return async function (req, res, next) {
+        let accessToken = req.get('Authorization');
+        if (!accessToken) {
+            req.userType = 0; // 0 尚未登入 1 已登入
+            next();
+            return;
+        }
+        // accessToken = accessToken.replace('Bearer ', '');
+        // if (accessToken == 'null') {
+        //     req.userType = 0; // 0 尚未登入 1 已登入
+        //     next();
+        // }
+        try {
+            accessToken = accessToken.replace('Bearer ', '');
+            const user = jwt.verify(accessToken, TOKEN_SECRET);
+            req.user = user;
+            req.userType = 1; // 0 尚未登入 1 已登入
+            if (roleId == null) {
+                next();
+            } else {
+                let userDetail;
+                if (roleId == User.USER_ROLE.ALL) {
+                    userDetail = await User.getUserDetail(user.email);
+                } else {
+                    userDetail = await User.getUserDetail(user.email, roleId);
+                }
+                if (!userDetail) {
+                    res.status(403).send({error: 'Forbidden'});
+                } else {
+                    req.user.id = userDetail.id;
+                    req.user.role_id = userDetail.role_id;
+                    next();
+                }
+            }
+            return;
+        } catch(err) {
+            // console.log(err);
+            res.status(403).send({error: 'Forbidden'});
+            return;
+        }
+    };
+};
+
 module.exports = {
     upload,
     getImagePath,
     wrapAsync,
-    authentication
+    authentication,
+    getUserInfobyToken
 };
