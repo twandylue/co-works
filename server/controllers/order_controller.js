@@ -46,6 +46,7 @@ const checkout = async (req, res) => {
 const getOrderHistory = async (req, res) => {
     const email = req.user.email;
     const orderHistory = await Order.getOrderInfo(email);
+
     const orderHistoryList = [];
     for (const i in orderHistory.orderList) {
         for (const j in orderHistory.productMainImageList) {
@@ -61,7 +62,11 @@ const getOrderHistory = async (req, res) => {
             orderHistoryList
         }
     };
-    if(orderHistoryList.length) {
+
+    if (orderHistory === 0) {
+        res.status(500).send({message: 'Your order list is empty.'});
+        return;
+    } else if (orderHistoryList.length) {
         res.status(200).send(response);
         return;
     } else {

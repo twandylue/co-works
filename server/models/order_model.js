@@ -58,6 +58,9 @@ const getOrderInfo = async (email) => {
         await transaction();
         const userInfo = await query('SELECT id FROM user WHERE email = ?', [email]);
         const orderList = await query('SELECT `number`, time, product_id, `name`, price, color_code, color_name, size, qty FROM order_list_table WHERE user_email = ? ORDER BY id', [email]);
+        if (orderList.length === 0) {
+            return(0);
+        }
         const productIdList = [];
         const numberList = [];
         for (const i in orderList) {
@@ -76,7 +79,7 @@ const getOrderInfo = async (email) => {
         };
         return(result);
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         await rollback();
         return({error});
     }
