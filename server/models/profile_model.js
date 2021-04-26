@@ -7,7 +7,7 @@ const getUserProfileInfo = async (email, roleId) => {
             const users = await query('SELECT * FROM user WHERE email = ? AND role_id = ?', [email, roleId]);
             return users[0];
         } else {
-            const users = await query('SELECT `name`, id, picture, points FROM user WHERE email = ?', [email]);
+            const users = await query('SELECT `name`, id, picture FROM user WHERE email = ?', [email]);
             return users[0];
         }
     } catch (e) {

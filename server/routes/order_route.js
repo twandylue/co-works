@@ -17,7 +17,7 @@ const {
 
 router.route('/order/checkout').post(authentication(USER_ROLE.ALL), wrapAsync(checkout)); // 要改 ratingStatus = 0
 
-router.route('/order/checkout').get(authentication(USER_ROLE.ALL), wrapAsync(getOrderHistory)); // 要改 ratingStatus
+router.route('/order/orderhistory').get(authentication(USER_ROLE.ALL), wrapAsync(getOrderHistory)); // 要改 ratingStatus
 
 // For load testing (Not in API Docs)
 router.route('/order/payments')

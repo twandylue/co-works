@@ -22,7 +22,8 @@ const getCollectionInfo = async (req, res) => {
 const updateCollecitonInfo = async (req, res) => {
     const collectionItem = req.body.data.collectionList;
     const email = req.user.email;
-    const result = await updateCollection(email, collectionItem[0]);
+    const result = await updateCollection(email, collectionItem);
+    console.log(result);
     if (result.status === 1) {
         res.status(200).send({message: 'Update collection list sucesses!'});
         return;
