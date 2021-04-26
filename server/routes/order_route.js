@@ -17,8 +17,6 @@ const {
 
 router.route('/order/checkout').post(authentication(USER_ROLE.ALL), wrapAsync(checkout));
 
-router.route('/order/orderhistory').get(authentication(USER_ROLE.ALL), wrapAsync(getOrderHistory));
-
 // For load testing (Not in API Docs)
 router.route('/order/payments')
     .get(wrapAsync(getUserPayments));
