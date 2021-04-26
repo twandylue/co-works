@@ -11,21 +11,24 @@ const getCart = async (email) => {
 };
 
 const updateCart = async (email, products) => {
-    const result = {};
-    // console.log(products);
     const id = products.product_id;
     const size = products.size;
     const colorCode = products.color_code;
+    const qty = products.qty;
+    if (qty === 0) {
+        await query('DELETE FROM cart WHERE email = ? AND product_id = ? AND size = ? AND color_code = ?', [email, id, size, colorCode]);
+        return {message: 'Remove product from your cart.'};
+    }
     try {
         await transaction();
-        // test
-        // result.delete = await query('DELETE FROM cart WHERE email = ?', [email]);
-        // if (products.length) {
-        //     // console.log(products);
-        //     result.insert = await query('INSERT INTO cart (email, product_id, title, size, color, price, image, qty) VALUES ?', [products]);
-        // }
+        const cartItem = await query('SELECT * FROM cart WHERE email = ? AND product_id = ? AND size = ? AND color_code = ?', [email, id, size, colorCode]);
+        if (cartItem.length !== 0) {
+            await query('DELETE FROM cart WHERE email = ? AND product_id = ? AND size = ? AND color_code = ?', [email, id, size, colorCode]);
+        }
+        const insertInfo = [email, id, products.title, size, products.color_name, colorCode, products.price, products.image, products.qty];
+        await query('INSERT INTO cart (email, product_id, title, size, color_name, color_code, price, image, qty) VALUES ?', [[insertInfo]]);
         await commit();
-        return(result);
+        return {message: 'Update items in your cart.'};
     } catch(error) {
         await rollback();
         return {error};
