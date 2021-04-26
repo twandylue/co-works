@@ -21,7 +21,7 @@ const checkout = async (req, res) => {
     };
     orderRecord.user_id = (user && user.id) ? user.id : null;
     const orderId = await Order.createOrder(orderRecord);
-    const result = await Order.updataOrderDetailsTable(req.user.email, number, orderRecord.time, data.order);
+    const result = await Order.updataOrderDetailsTable(req.user.email, number, orderRecord.time, data.order); //
 
     let paymentResult;
     try {
@@ -34,12 +34,13 @@ const checkout = async (req, res) => {
         res.status(400).send({error});
         return;
     }
-    paymentResult = 'test';
+    // paymentResult = 'test';
     const payment = {
         order_id: orderId,
         details: validator.blacklist(JSON.stringify(paymentResult), '<>')
     };
     await Order.createPayment(payment);
+    await Order.clearCart(req.user.email);
     res.send({data: {number}});
 };
 
@@ -54,7 +55,7 @@ const getOrderHistory = async (req, res) => {
                 orderHistory.orderList[i].main_image = orderHistory.productMainImageList[j].main_image;
             }
         }
-        const combine = Object.assign(orderHistory.orderList[i], orderHistory.rateList[i]);
+        const combine = Object.assign(orderHistory.orderList[i], orderHistory.ratingList[i]);
         orderHistoryList.push(combine);
     }
     const response = {
