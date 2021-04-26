@@ -20,35 +20,45 @@ const checkout = async (req, res) => {
         details: validator.blacklist(JSON.stringify(data.order), '<>')
     };
     orderRecord.user_id = (user && user.id) ? user.id : null;
-    const orderId = await Order.createOrder(orderRecord);
+    // const orderId = await Order.createOrder(orderRecord);
+    const result = await Order.updataOrderDetailsTable(req.user.email, number, orderRecord.time, data.order);
+
     let paymentResult;
-    try {
-        paymentResult = await Order.payOrderByPrime(TAPPAY_PARTNER_KEY, data.prime, data.order);
-        if (paymentResult.status != 0) {
-            res.status(400).send({error: 'Invalid prime'});
-            return;
-        }
-    } catch (error) {
-        res.status(400).send({error});
-        return;
-    }
-    const payment = {
-        order_id: orderId,
-        details: validator.blacklist(JSON.stringify(paymentResult), '<>')
-    };
-    await Order.createPayment(payment);
-    res.send({data: {number}});
+    // try {
+    //     paymentResult = await Order.payOrderByPrime(TAPPAY_PARTNER_KEY, data.prime, data.order);
+    //     if (paymentResult.status != 0) {
+    //         res.status(400).send({error: 'Invalid prime'});
+    //         return;
+    //     }
+    // } catch (error) {
+    //     res.status(400).send({error});
+    //     return;
+    // }
+    // paymentResult = 'test';
+    // const payment = {
+    //     order_id: orderId,
+    //     details: validator.blacklist(JSON.stringify(paymentResult), '<>')
+    // };
+    // await Order.createPayment(payment);
+    // res.send({data: {number}});
 };
 
 const getOrderHistory = async (req, res) => {
     const email = req.user.email;
     const orderHistory = await Order.getOrderInfo(email);
+    // console.log(orderHistory);
+    const orderHistoryList = [];
+    for (const i in orderHistory.orderList) {
+        const combine = Object.assign(orderHistory.orderList[i], orderHistory.productMainImageList[i], orderHistory.rateList[i]);
+        orderHistoryList.push(combine);
+    }
+    // console.log(orderHistoryList);
     const response = {
         data: {
-            orderHistory
+            orderHistoryList
         }
     };
-    if(orderHistory) {
+    if(orderHistoryList.length) {
         res.status(200).send(response);
         return;
     } else {

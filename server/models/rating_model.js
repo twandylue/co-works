@@ -1,7 +1,7 @@
 require('dotenv').config();
 const {query, transaction, commit, rollback, format} = require('./mysqlcon');
 
-const updateRatingList = async (email, ratingList) => {
+const updateRatingList = async (email, ratingList) => { // 待改
     const result = {};
     try {
         await transaction();
