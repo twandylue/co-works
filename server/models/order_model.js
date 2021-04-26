@@ -56,7 +56,6 @@ const getUserPaymentsGroupByDB = async () => {
 const getOrderInfo = async (email) => {
     try {
         await transaction();
-        // const userInfo = await query('SELECT id FROM user WHERE email = ?', [email]);
         // const orderList = await query('SELECT `number`, time, product_id, `name`, price, color_code, color_name, size, qty FROM order_list_table WHERE user_email = ? ORDER BY id', [email]);
         const orderList = await query('SELECT `number`, time, product_id, `name`, price, color_code, color_name, size, qty FROM order_list_table WHERE user_email = ? ORDER BY product_id', [email]);
         if (orderList.length === 0) {
@@ -70,18 +69,18 @@ const getOrderInfo = async (email) => {
         }
 
         const productMainImageList = await query('SELECT id, main_image FROM product WHERE id in ? ORDER BY id', [[productIdList]]);
-        // const rateList = await query('SELECT rating FROM rating_table WHERE user_email = ? AND number in ? AND product_id in ? ORDER BY id', [email, [numberList], [productIdList]]);
-        const rateList = await query('SELECT rating FROM rating_table WHERE user_email = ? AND number in ? AND product_id in ? ORDER BY product_id', [email, [numberList], [productIdList]]);
+        // const ratingList = await query('SELECT rating FROM rating_table WHERE user_email = ? AND number in ? AND product_id in ? ORDER BY id', [email, [numberList], [productIdList]]);
+        const ratingList = await query('SELECT rating FROM rating_table WHERE user_email = ? AND number in ? AND product_id in ? ORDER BY product_id', [email, [numberList], [productIdList]]);
 
         await commit();
         const result = {
             orderList: orderList,
             productMainImageList: productMainImageList,
-            rateList: ratingList
+            ratingList: ratingList
         };
         return(result);
     } catch (error) {
-        // console.log(error);
+        console.log(error);
         await rollback();
         return({error});
     }
@@ -118,6 +117,18 @@ const clearCart = async (email) => {
     return;
 };
 
+const checkStock = async (order) => {
+    const infoList = [];
+    for (const i in order.list) {
+        const info = {
+            productId: order.list[i].id,
+            qty: order.list[i].qty
+        };
+        infoList.push(info);
+    }
+    // console.log(infoList);
+};
+
 module.exports = {
     createOrder,
     createPayment,
@@ -126,5 +137,6 @@ module.exports = {
     getUserPaymentsGroupByDB,
     getOrderInfo,
     updataOrderDetailsTable,
-    clearCart
+    clearCart,
+    checkStock
 };

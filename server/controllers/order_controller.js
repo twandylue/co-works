@@ -20,8 +20,10 @@ const checkout = async (req, res) => {
         details: validator.blacklist(JSON.stringify(data.order), '<>')
     };
     orderRecord.user_id = (user && user.id) ? user.id : null;
+    // ---race conditon
+    // await Order.checkStock(data.order);
     const orderId = await Order.createOrder(orderRecord);
-    const result = await Order.updataOrderDetailsTable(req.user.email, number, orderRecord.time, data.order); //
+    const result = await Order.updataOrderDetailsTable(req.user.email, number, orderRecord.time, data.order);
 
     let paymentResult;
     try {
@@ -41,13 +43,13 @@ const checkout = async (req, res) => {
     };
     await Order.createPayment(payment);
     await Order.clearCart(req.user.email);
+    // ---減少product stock
     res.send({data: {number}});
 };
 
 const getOrderHistory = async (req, res) => {
     const email = req.user.email;
     const orderHistory = await Order.getOrderInfo(email);
-
     const orderHistoryList = [];
     for (const i in orderHistory.orderList) {
         for (const j in orderHistory.productMainImageList) {
