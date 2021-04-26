@@ -3,7 +3,7 @@ const {query, transaction, commit, rollback} = require('./mysqlcon');
 
 const getCart = async (email) => {
     try {
-        const result = await query('SELECT product_id, title, size, color, price, image, qty FROM cart WHERE email = ?', [email]);
+        const result = await query('SELECT product_id, title, size, color_name, color_code, price, image, qty FROM cart WHERE email = ?', [email]);
         return result;
     } catch (error) {
         return {error};
