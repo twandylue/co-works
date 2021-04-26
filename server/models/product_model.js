@@ -15,7 +15,7 @@ const createProduct = async (product, variants) => {
 
 const getProducts = async (pageSize, paging = 0, requirement = {}) => {
     console.log(requirement);
-    const condition = {sql: '', binding: [], orderby: 'ORDER BY id'};
+    const condition = {sql: '', binding: [], orderby: 'ORDER BY id '};
     if (requirement.category) {
         condition.sql = 'WHERE category = ?';
         condition.binding = [requirement.category];
