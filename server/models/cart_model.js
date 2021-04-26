@@ -12,13 +12,18 @@ const getCart = async (email) => {
 
 const updateCart = async (email, products) => {
     const result = {};
+    // console.log(products);
+    const id = products.product_id;
+    const size = products.size;
+    const colorCode = products.color_code;
     try {
         await transaction();
-        result.delete = await query('DELETE FROM cart WHERE email = ?', [email]);
-        if (products.length) {
-            // console.log(products);
-            result.insert = await query('INSERT INTO cart (email, product_id, title, size, color, price, image, qty) VALUES ?', [products]);
-        }
+
+        // result.delete = await query('DELETE FROM cart WHERE email = ?', [email]);
+        // if (products.length) {
+        //     // console.log(products);
+        //     result.insert = await query('INSERT INTO cart (email, product_id, title, size, color, price, image, qty) VALUES ?', [products]);
+        // }
         await commit();
         return(result);
     } catch(error) {

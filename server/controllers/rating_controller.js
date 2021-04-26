@@ -19,10 +19,10 @@ const updateProductRatingTable = async (req, res) => {
     const ratingItem = req.body.data.ratingItem;
     const result = await updateProductRating(ratingItem);
     if (result.update.affectedRows) {
-        res.status(200).send({message: 'Update rating !'});
+        res.status(200).send({message: 'Update rating sucesses!'});
         return;
     } else {
-        res.status(500).send({error: 'Database Query Error'});
+        res.status(500).send({error: 'Database Query Error.'});
         return;
     }
 };
