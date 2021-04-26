@@ -57,9 +57,6 @@ const getOrderInfo = async (email) => {
     try {
         await transaction();
         const userInfo = await query('SELECT id FROM user WHERE email = ?', [email]);
-        // console.log(userInfo[0].id); // for test
-        // result.userOrderInfo = await query('SELECT * FROM order_table WHERE user_id = ?', [userInfo[0].id]);
-        // const orderHistory = await query('SELECT * FROM order_table WHERE user_id = ?', [5]); // for test
         const orderList = await query('SELECT `number`, time, product_id, `name`, price, color_code, color_name, size, qty FROM order_list_table WHERE user_email = ? ORDER BY id', [email]);
         const productIdList = [];
         const numberList = [];
@@ -67,13 +64,9 @@ const getOrderInfo = async (email) => {
             productIdList.push(orderList[i].product_id);
             numberList.push(orderList[i].number);
         }
-        console.log(productIdList);
 
-        const productMainImageList = await query('SELECT main_image FROM product WHERE id in ? ORDER BY id', [[productIdList]]);
-        console.log(productMainImageList);
+        const productMainImageList = await query('SELECT id, main_image FROM product WHERE id in ? ORDER BY id', [[productIdList]]);
         const rateList = await query('SELECT rating FROM rating_table WHERE user_email = ? AND number in ? AND product_id in ? ORDER BY id', [email, [numberList], [productIdList]]);
-
-        console.log(rateList);
 
         await commit();
         const result = {
