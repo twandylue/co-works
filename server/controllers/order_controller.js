@@ -21,6 +21,8 @@ const checkout = async (req, res) => {
     };
     orderRecord.user_id = (user && user.id) ? user.id : null;
     const orderId = await Order.createOrder(orderRecord);
+    const result = await Order.updataOrderDetailsTable(req.user.email, number, orderRecord.time, data.order);
+
     let paymentResult;
     try {
         paymentResult = await Order.payOrderByPrime(TAPPAY_PARTNER_KEY, data.prime, data.order);
@@ -32,6 +34,7 @@ const checkout = async (req, res) => {
         res.status(400).send({error});
         return;
     }
+    paymentResult = 'test';
     const payment = {
         order_id: orderId,
         details: validator.blacklist(JSON.stringify(paymentResult), '<>')
@@ -43,12 +46,22 @@ const checkout = async (req, res) => {
 const getOrderHistory = async (req, res) => {
     const email = req.user.email;
     const orderHistory = await Order.getOrderInfo(email);
+    const orderHistoryList = [];
+    for (const i in orderHistory.orderList) {
+        for (const j in orderHistory.productMainImageList) {
+            if (orderHistory.orderList[i].product_id === orderHistory.productMainImageList[j].id) {
+                orderHistory.orderList[i].main_image = orderHistory.productMainImageList[j].main_image;
+            }
+        }
+        const combine = Object.assign(orderHistory.orderList[i], orderHistory.rateList[i]);
+        orderHistoryList.push(combine);
+    }
     const response = {
         data: {
-            orderHistory
+            orderHistoryList
         }
     };
-    if(orderHistory) {
+    if(orderHistoryList.length) {
         res.status(200).send(response);
         return;
     } else {

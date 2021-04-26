@@ -11,15 +11,14 @@ const getCollection = async (email) => {
 };
 
 const updateCollection = async (email, collectionItem) => {
-    const result = {};
+    let result = {};
     if (collectionItem.status === 1) {
         try {
             await transaction();
             // result.delete = await query('DELETE FROM collection WHERE email = ?', [email]); // for insurance
             const insertInfo = [email, collectionItem.title, collectionItem.product_id, collectionItem.price, collectionItem.image, collectionItem.status];
-            result.insert = await query('INSERT INTO collection (email, title, product_id, price, image, `status`) VALUES ?', [[insertInfo]]);
+            result = await query('INSERT INTO collection (email, title, product_id, price, image, `status`) VALUES ?', [[insertInfo]]);
             await commit();
-            result.status = 1;
             return(result);
         } catch (error) {
             await rollback();
@@ -27,8 +26,7 @@ const updateCollection = async (email, collectionItem) => {
         }
     } else if (collectionItem.status === 0) {
         try {
-            result.delete = await query('DELETE FROM collection WHERE email = ? AND product_id = ?', [email, collectionItem.product_id]);
-            result.status = 1;
+            result = await query('DELETE FROM collection WHERE email = ? AND product_id = ?', [email, collectionItem.product_id]);
         } catch (error) {
             return {error};
         }
