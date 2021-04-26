@@ -18,7 +18,7 @@ const updateCart = async (email, products) => {
     const colorCode = products.color_code;
     try {
         await transaction();
-
+        // test
         // result.delete = await query('DELETE FROM cart WHERE email = ?', [email]);
         // if (products.length) {
         //     // console.log(products);
