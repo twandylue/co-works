@@ -4,13 +4,14 @@ const {updateRatingList, updateProductRating} = require('../models/rating_model'
 const updateRatingTable = async (req, res, next) => {
     const ratingItem = req.body.data.ratingItem;
     const email = req.user.email;
-    const result = await updateRatingList(email, ratingItem);
-    if (result.select.length) {
+    const resStatus = await updateRatingList(email, ratingItem);
+    if (resStatus === 1) {
         next();
         return;
-    } else {
-        res.status(500).send({error: 'Database Query Error'});
-        // next();
+    } else if (resStatus === 0) {
+        // res.status(500).send({error: 'Database Query Error'});
+        // test
+        res.status(500).send({message: 'Wrong number or product_id in your ratingItem. There is no match data in database.'});
         return;
     }
 };

@@ -7,22 +7,21 @@ const updateRatingList = async (email, ratingItem) => {
     const rating = ratingItem.rating;
     const result = {};
     try {
-        await transaction();
         result.select = await query('SELECT rating FROM rating_table WHERE user_email =  ? AND `number` = ? AND product_id = ?', [email, number, product_id]);
-        if (result.select[0].rating === 0) {
+        if (result.select.length === 0) {
+            return(0);
+        } else if (result.select[0].rating === 0) {
             result.update = await query('UPDATE rating_table SET rating = ? WHERE user_email =  ? AND `number` = ? AND product_id = ?', [rating, email, number, product_id]);
         }
-        await commit();
-        return(result);
+        // return(result);
+        return(1);
     } catch (error) {
         console.log(error);
-        await rollback();
         return {error};
     }
 };
 
 const updateProductRating = async (ratingItem) => {
-    console.log(ratingItem);
     const result = {};
     const ans = await query('SELECT rating FROM rating_table WHERE product_id = ?', [ratingItem.product_id]);
     let totalRating = 0;
