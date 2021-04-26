@@ -56,6 +56,7 @@ const getUserPaymentsGroupByDB = async () => {
 const getOrderInfo = async (email) => {
     try {
         await transaction();
+        // test
         const userInfo = await query('SELECT id FROM user WHERE email = ?', [email]);
         // console.log(userInfo[0].id); // for test
         // result.userOrderInfo = await query('SELECT * FROM order_table WHERE user_id = ?', [userInfo[0].id]);
