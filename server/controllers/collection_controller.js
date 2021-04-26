@@ -20,7 +20,7 @@ const getCollectionInfo = async (req, res) => {
 };
 
 const updateCollecitonInfo = async (req, res) => {
-    const collectionItem = req.body.data.collectionList;
+    const collectionItem = req.body.data.collectionItem;
     const email = req.user.email;
     const result = await updateCollection(email, collectionItem);
     console.log(result);

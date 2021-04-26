@@ -22,7 +22,7 @@ const getCartInfo = async (req, res) => {
 const updateCartInfo = async (req, res) => {
     const cart = req.body.data.cart;
     const email = req.user.email;
-    const products = [];
+    // const products = [];
     // for (const i in cart) {
     //     const product = [];
     //     product.push(email, cart[i].product_id, cart[i].title, cart[i].size, cart[i].color, cart[i].price, cart[i].image, cart[i].qty, cart[i].date);
