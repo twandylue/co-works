@@ -1,6 +1,6 @@
 class Api {
   constructor() {
-    this.API_HOST = 'localhost:3000/api/1.0';
+    this.API_HOST = 'https://api.appworks-school.tw/api/1.0';
     this.accessToken = undefined;
   }
 

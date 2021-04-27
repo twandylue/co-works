@@ -13,6 +13,10 @@ const getCart = async (email) => {
             insert.push(info);
         }
         const stock = await query('SELECT stock FROM variant WHERE (product_id, color_code, size) IN ?', [[insert]]);
+        console.log(insert);
+        if (stock.length === 0) { // for test
+            return({message: '有問題 加入購物車時size color組合出錯，找不到該項商品。 請在購物車中刪除該項商品後 重新加入正確狀態(組合)的商品。'});
+        }
         for (const i in result) {
             result[i].stock = stock[i].stock;
         }

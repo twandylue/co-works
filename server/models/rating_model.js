@@ -14,6 +14,7 @@ const updateRatingList = async (email, ratingItem) => {
             result.update = await query('UPDATE rating_table SET rating = ? WHERE user_email =  ? AND `number` = ? AND product_id = ?', [rating, email, number, product_id]);
         }
         // return(result);
+        console.log(result);
         return(1);
     } catch (error) {
         console.log(error);

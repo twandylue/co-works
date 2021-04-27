@@ -21,7 +21,7 @@ const checkout = async (req, res) => {
     };
     orderRecord.user_id = (user && user.id) ? user.id : null;
     // ---race condition
-    const status = await Order.checkStock(data.order); //
+    const status = await Order.checkStock(data.order); // not finished
     if (status.length !== 0) {
         // console.log(status);
         res.status(500).send({message: status});
