@@ -10,7 +10,6 @@ const updateRatingTable = async (req, res, next) => {
         return;
     } else if (resStatus === 0) {
         // res.status(500).send({error: 'Database Query Error'});
-        // test
         res.status(500).send({message: 'Wrong number or product_id in your ratingItem. There is no match data in database.'});
         return;
     }

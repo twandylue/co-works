@@ -86,7 +86,7 @@ const getOrderInfo = async (email) => {
     }
 };
 
-const updataOrderDetailsTable = async (email, number, time, order) => { // 需要更正 新增考慮付款狀態 有付款才能做事情
+const updateOrderDetailsTable = async (email, number, time, order) => {
     const result = {};
     try {
         await transaction();
@@ -120,13 +120,29 @@ const clearCart = async (email) => {
 const checkStock = async (order) => {
     const infoList = [];
     for (const i in order.list) {
-        const info = {
-            productId: order.list[i].id,
-            qty: order.list[i].qty
-        };
-        infoList.push(info);
+    const info = [order.list[i].id, order.list[i].color.code, order.list[i].size];
+    infoList.push(info);
     }
-    // console.log(infoList);
+    const stockList = await query('SELECT product_id, stock FROM variant WHERE (product_id, color_code, size) IN ?', [[infoList]]);
+    // console.log(stockList);
+    const Status = [];
+    for (const i in stockList) {
+        if (order.list[i].qty > stockList[i].stock) {
+            const message = {
+                name: order.list[i].name,
+                size: order.list[i].size,
+                colorName: order.list[i].color.name,
+                condition: 'qty over stock',
+            };
+            Status.push(message);
+        }
+    }
+    if (Status.length) {
+        // console.log(Status);
+        return(Status);
+    } else {
+        return([]);
+    }
 };
 
 module.exports = {
@@ -136,7 +152,7 @@ module.exports = {
     getUserPayments,
     getUserPaymentsGroupByDB,
     getOrderInfo,
-    updataOrderDetailsTable,
+    updateOrderDetailsTable,
     clearCart,
     checkStock
 };

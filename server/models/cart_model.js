@@ -3,9 +3,22 @@ const {query, transaction, commit, rollback} = require('./mysqlcon');
 
 const getCart = async (email) => {
     try {
-        const result = await query('SELECT product_id, title, size, color_name, color_code, price, image, qty FROM cart WHERE email = ?', [email]);
+        const result = await query('SELECT product_id, title, size, color_name, color_code, price, image, qty FROM cart WHERE email = ? ORDER BY product_id', [email]);
+        if (result.length === 0) {
+            return({message: 'Your cart is empty'});
+        }
+        const insert = [];
+        for (const i in result) {
+            const info = [result[i].product_id, result[i].color_code, result[i].size];
+            insert.push(info);
+        }
+        const stock = await query('SELECT stock FROM variant WHERE (product_id, color_code, size) IN ?', [[insert]]);
+        for (const i in result) {
+            result[i].stock = stock[i].stock;
+        }
         return result;
     } catch (error) {
+        console.log(error);
         return {error};
     }
 };

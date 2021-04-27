@@ -6,7 +6,6 @@ const {
 
 const {
     checkout,
-    getOrderHistory,
     getUserPayments,
     getUserPaymentsGroupByDB,
 } = require('../controllers/order_controller');

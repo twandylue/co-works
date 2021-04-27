@@ -20,10 +20,15 @@ const checkout = async (req, res) => {
         details: validator.blacklist(JSON.stringify(data.order), '<>')
     };
     orderRecord.user_id = (user && user.id) ? user.id : null;
-    // ---race conditon
-    // await Order.checkStock(data.order);
+    // ---race condition
+    const status = await Order.checkStock(data.order); //
+    if (status.length !== 0) {
+        // console.log(status);
+        res.status(500).send({message: status});
+        return;
+    }
     const orderId = await Order.createOrder(orderRecord);
-    const result = await Order.updataOrderDetailsTable(req.user.email, number, orderRecord.time, data.order);
+    const result = await Order.updateOrderDetailsTable(req.user.email, number, orderRecord.time, data.order);
 
     let paymentResult;
     try {
@@ -41,6 +46,7 @@ const checkout = async (req, res) => {
         order_id: orderId,
         details: validator.blacklist(JSON.stringify(paymentResult), '<>')
     };
+    await Order.updateOrderDetailsTable(req.user.email, number, orderRecord.time, data.order);
     await Order.createPayment(payment);
     await Order.clearCart(req.user.email);
     // ---減少product stock
