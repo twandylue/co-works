@@ -33,7 +33,8 @@ app.use('/api/' + API_VERSION,
         require('./server/routes/updateMySQL_route'), // for update crawler data to mySQL
         require('./server/routes/cart_route'), // for cart
         require('./server/routes/collection_route'), // for collection
-        require('./server/routes/rating_route') // fot rating
+        require('./server/routes/rating_route'), // fot rating
+        require('./server/routes/recommend_route') // fot rating
     ]
 );
 
