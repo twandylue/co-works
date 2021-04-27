@@ -1,5 +1,6 @@
 const {query, transaction, commit, rollback} = require('./mysqlcon');
 const got = require('got');
+const moment = require('moment');
 
 const createOrder = async (order) => {
     const result = await query('INSERT INTO order_table SET ?', order);
@@ -59,6 +60,14 @@ const getOrderInfo = async (email) => {
         await transaction();
         // const orderList = await query('SELECT `number`, time, product_id, `name`, price, color_code, color_name, size, qty FROM order_list_table WHERE user_email = ? ORDER BY id', [email]);
         const orderList = await query('SELECT `number`, time, product_id, `name`, price, color_code, color_name, size, qty FROM order_list_table WHERE user_email = ? ORDER BY product_id', [email]);
+
+        for(const i in orderList) {
+            let date = moment(orderList[i].time).format('YYYY MM DD');
+            const dateArr = date.split(' ');
+            date = dateArr[0] + '/' + dateArr[1] + '/' + dateArr[2];
+            orderList[i].time = date;
+        }
+
         if (orderList.length === 0) {
             return(0);
         }
@@ -100,7 +109,7 @@ const updateOrderDetailsTable = async (email, number, time, order) => {
             insertInfo.push(insert);
             insertRatingInfo.push(insertRating);
         }
-        result.insertToOrder_details_table = await query('INSERT INTO order_list_table (`number`, time, user_email, product_id, name, price, color_code, color_name, size, qty, rating_status) VALUES ?', [insertInfo]);
+        result.insertToOrder_list_table = await query('INSERT INTO order_list_table (`number`, time, user_email, product_id, name, price, color_code, color_name, size, qty, rating_status) VALUES ?', [insertInfo]);
         result.insrtToRating_table = await query('INSERT INTO rating_table (user_email, `number`, product_id, rating) VALUES ?', [insertRatingInfo]);
         await commit();
         console.log('in order_updataOrderDetailsTable():------');

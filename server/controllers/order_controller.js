@@ -28,7 +28,6 @@ const checkout = async (req, res) => {
         return;
     }
     const orderId = await Order.createOrder(orderRecord);
-    const result = await Order.updateOrderDetailsTable(req.user.email, number, orderRecord.time, data.order);
 
     let paymentResult;
     try {
