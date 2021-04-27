@@ -52,8 +52,9 @@ const getProducts = async (req, res) => {
                 return await Product.getProducts(pageSize, paging, {category});
             case 'search': {
                 const keyword = req.query.keyword;
+                const filter = req.query.filter;
                 if (keyword) {
-                    return await Product.getProducts(pageSize, paging, {keyword});
+                    return await Product.getProducts(pageSize, paging, {keyword, filter});
                 }
                 break;
             }
@@ -70,6 +71,7 @@ const getProducts = async (req, res) => {
         return Promise.resolve({});
     }
     const {products, productCount} = await findProduct(category);
+    // console.log(products[0].rating);
     if (!products) {
         res.status(400).send({error:'Wrong Request'});
         return;
@@ -99,30 +101,22 @@ const getProducts = async (req, res) => {
 
     if (category == 'details') { // 有更有效率的寫法!?
         result.data.rating = products[0].rating;
-        if (req.userType === 1) {
-            for (const i in collectionList) {
-                if (collectionList[i].product_id === result.data.id) {
-                    result.data.status = collectionList[i].status;
-                } else if (req.userType === 0) {
-                    result.data.status = 0;
-                }
+        for (const i in collectionList) {
+            if (collectionList[i].product_id === result.data.id) {
+                result.data.status = collectionList[i].status;
+            } else {
+                result.data.status = 0;
             }
         }
     } else {
-        if (req.userType === 1) {
-            for (const i in products) { // 有更有效率的寫法!?
-                result.data[i].rating = products[i].rating;
-                for (const j in collectionList) { // 有更有效率的寫法!?
-                    if (collectionList[j].product_id === result.data[i].id) {
-                        result.data[i].status = collectionList[j].status;
-                    } else {
-                        result.data[i].status = 0;
-                    }
+        for (const i in products) { // 有更有效率的寫法!?
+            result.data[i].rating = products[i].rating;
+            for (const j in collectionList) { // 有更有效率的寫法!?
+                if (collectionList[j].product_id === result.data[i].id) {
+                    result.data[i].status = collectionList[j].status;
+                } else {
+                    result.data[i].status = 0;
                 }
-            }
-        } else if (req.userType === 0) {
-            for (const i in products) {
-                result.data[i].status = 0;
             }
         }
     }

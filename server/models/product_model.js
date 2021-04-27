@@ -14,14 +14,35 @@ const createProduct = async (product, variants) => {
 };
 
 const getProducts = async (pageSize, paging = 0, requirement = {}) => {
-    const condition = {sql: '', binding: []};
+    const condition = {sql: '', binding: [], orderby: ' ORDER BY id '};
     if (requirement.category) {
         condition.sql = 'WHERE category = ?';
         condition.binding = [requirement.category];
+        console.log(condition.binding);
+
     } else if (requirement.keyword != null) {
-        condition.sql = 'WHERE title LIKE ?';
-        condition.binding = [`%${requirement.keyword}%`];
-    } else if (requirement.id != null) {
+
+        if(requirement.filter != null){
+            if(requirement.filter === 'priceHToL'){
+                condition.orderby = 'ORDER BY `price` DESC ';
+            }else if(requirement.filter === 'priceLToH'){
+                condition.orderby = 'ORDER BY `price` ';
+            }
+
+        }
+        if(requirement.keyword === 'all'){
+            condition.sql = 'WHERE title LIKE ?';
+            condition.binding = ['%%'];
+        }else{
+            condition.binding = [`%${requirement.keyword}%`];
+            condition.sql = 'WHERE title LIKE ?';
+        }
+
+
+
+
+
+    }  else if (requirement.id != null) {
         condition.sql = 'WHERE id = ?';
         condition.binding = [requirement.id];
     }
@@ -31,7 +52,7 @@ const getProducts = async (pageSize, paging = 0, requirement = {}) => {
         binding: [pageSize * paging, pageSize]
     };
 
-    const productQuery = 'SELECT * FROM product ' + condition.sql + ' ORDER BY id ' + limit.sql;
+    const productQuery = 'SELECT * FROM product ' + condition.sql + condition.orderby + limit.sql;
     const productBindings = condition.binding.concat(limit.binding);
     const products = await query(productQuery, productBindings);
 
