@@ -71,7 +71,6 @@ const getProducts = async (req, res) => {
         return Promise.resolve({});
     }
     const {products, productCount} = await findProduct(category);
-    // console.log(products[0].rating);
     if (!products) {
         res.status(400).send({error:'Wrong Request'});
         return;
@@ -99,28 +98,42 @@ const getProducts = async (req, res) => {
         data: productsWithDetail,
     };
 
-    if (category == 'details') { // 有更有效率的寫法!?
-        result.data.rating = products[0].rating;
-        for (const i in collectionList) {
-            if (collectionList[i].product_id === result.data.id) {
-                result.data.status = collectionList[i].status;
-            } else {
-                result.data.status = 0;
+    if (req.userType === 0) {
+        if (category == 'details') { // 有更有效率的寫法!?
+            result.data.rating = products[0].rating;
+            result.data.status = 0;
+        } else {
+            for (const i in products) { // 有更有效率的寫法!?
+                result.data[i].rating = products[i].rating;
+                result.data[i].status = 0;
             }
         }
     } else {
-        for (const i in products) { // 有更有效率的寫法!?
-            result.data[i].rating = products[i].rating;
-            for (const j in collectionList) { // 有更有效率的寫法!?
-                if (collectionList[j].product_id === result.data[i].id) {
-                    result.data[i].status = collectionList[j].status;
+        if (category == 'details') { // 有更有效率的寫法!?
+            result.data.rating = products[0].rating;
+            for (const i in collectionList) {
+                if (collectionList[i].product_id === result.data.id) {
+                    result.data.status = collectionList[i].status;
                 } else {
-                    result.data[i].status = 0;
+                    result.data.status = 0;
+                }
+            }
+        } else {
+            for (const i in products) { // 有更有效率的寫法!?
+                result.data[i].rating = products[i].rating;
+                for (const j in collectionList) { // 有更有效率的寫法!?
+                    if (collectionList[j].product_id === result.data[i].id) {
+                        result.data[i].status = 1;
+                    } else if (!result.data[i].status) {
+                        result.data[i].status = 0;
+                    }
                 }
             }
         }
     }
+
     res.status(200).json(result);
+    return;
 };
 
 const getProductsWithDetail = async (protocol, hostname, products) => {

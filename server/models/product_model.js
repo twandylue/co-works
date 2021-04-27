@@ -38,10 +38,6 @@ const getProducts = async (pageSize, paging = 0, requirement = {}) => {
             condition.sql = 'WHERE title LIKE ?';
         }
 
-
-
-
-
     }  else if (requirement.id != null) {
         condition.sql = 'WHERE id = ?';
         condition.binding = [requirement.id];
