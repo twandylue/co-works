@@ -11,6 +11,7 @@ const createPayment = async function(payment){
         await transaction();
         await query('INSERT INTO payment SET ?', payment);
         await query('UPDATE order_table SET status = ?', [0]);
+        // await query('UPDATE order_table SET status = ? WHERE id = ?', [0, orderId]);
         await commit();
         return true;
     } catch (error) {

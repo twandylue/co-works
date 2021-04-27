@@ -28,9 +28,11 @@ const upload = multer({
 
 const getImagePath = (protocol, hostname, productId) => {
     if (protocol == 'http') {
-        return protocol + '://' + hostname + ':' + port + '/assets/' + productId + '/';
+        // return protocol + '://' + hostname + ':' + port + '/assets/' + productId + '/';
+        return('');
     } else {
-        return protocol + '://' + hostname + '/assets/' + productId + '/';
+        // return protocol + '://' + hostname + '/assets/' + productId + '/';
+        return('');
     }
 };
 
