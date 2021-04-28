@@ -5,6 +5,6 @@ const {updloadFakeData} = require('../models/fakeData_model');
 
 // router.route('/crawler').get(updateMySQL);
 
-// router.route('/fakeData').get(updloadFakeData);
+router.route('/fakeData').get(updloadFakeData);
 
 module.exports = router;
