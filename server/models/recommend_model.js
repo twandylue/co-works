@@ -32,7 +32,6 @@ const selectRecommend = async (productId) =>{
             }
             printf.data = printf.data.sort(() => Math.random() - 0.5);
 
-            console.log(printf);
             return printf;
 
         }else{
