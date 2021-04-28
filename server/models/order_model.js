@@ -133,11 +133,11 @@ const checkStock = async (order) => {
     const info = [order.list[i].id, order.list[i].color.code, order.list[i].size];
     infoList.push(info);
     }
-    const stockList = await query('SELECT product_id, stock FROM variant WHERE (product_id, color_code, size) IN ?', [[infoList]]);
 
+    // const insert = [['CCCCCC', 'S', 1], ['FFFFFF', 'M', 2], ['FFDDDD', 'M', 3]];
+    // const stockList = await query('SELECT product_id, stock FROM variant WHERE (product_id, color_code, size) IN ?', [[infoList]]);
 
     // trans
-    const insert = [['CCCCCC', 'S', 1], ['FFFFFF', 'M', 2], ['FFDDDD', 'M', 3]];
     // await transaction();
     const test = {};
     // await query('UPDATE for_test SET stock = 1 WHERE (color_code, size, product_id) IN ?', [[[0]], [insert]]);
@@ -151,29 +151,26 @@ const checkStock = async (order) => {
     // taypay
     // commit or rollback
 
-
-
-
-    // console.log(stockList);
+    console.log(stockList);
     // console.log('test');
-    // const Status = [];
-    // for (const i in stockList) {
-    //     if (order.list[i].qty > stockList[i].stock) {
-    //         const message = {
-    //             name: order.list[i].name,
-    //             size: order.list[i].size,
-    //             colorName: order.list[i].color.name,
-    //             condition: 'qty over stock',
-    //         };
-    //         Status.push(message);
-    //     }
-    // }
-    // if (Status.length) {
-    //     // console.log(Status);
-    //     return(Status);
-    // } else {
-    //     return([]);
-    // }
+    const Status = [];
+    for (const i in stockList) {
+        if (order.list[i].qty > stockList[i].stock) {
+            const message = {
+                name: order.list[i].name,
+                size: order.list[i].size,
+                colorName: order.list[i].color.name,
+                condition: 'qty over stock',
+            };
+            Status.push(message);
+        }
+    }
+    if (Status.length) {
+        // console.log(Status);
+        return(Status);
+    } else {
+        return([]);
+    }
 };
 
 module.exports = {
