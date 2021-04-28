@@ -48,7 +48,7 @@ const getProducts = async (req, res) => {
     async function findProduct(category) {
         switch (category) {
             case 'all':
-                return await Product.getProducts(pageSize, paging);
+                return await Product.getProducts(pageSize, paging, {filter});
             case 'men': case 'women': case 'accessories':
 
                 return await Product.getProducts(pageSize, paging, {category, filter});

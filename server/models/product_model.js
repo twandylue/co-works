@@ -15,27 +15,29 @@ const createProduct = async (product, variants) => {
 
 const getProducts = async (pageSize, paging = 0, requirement = {}) => {
     const condition = {sql: '', binding: [], orderby: ' ORDER BY id '};
-    if (requirement.category) {
-        if(requirement.filter != null){
-            if(requirement.filter === 'priceHToL'){
-                condition.orderby = 'ORDER BY `price` DESC ';
-            }else if(requirement.filter === 'priceLToH'){
-                condition.orderby = 'ORDER BY `price` ';
-            }
+
+    if(requirement.filter != null){
+        if(requirement.filter === 'priceHToL'){
+            condition.orderby = 'ORDER BY `price` DESC ';
+        }else if(requirement.filter === 'priceLToH'){
+            condition.orderby = 'ORDER BY `price` ';
         }
+    }
+
+    if (requirement.category) {
         condition.sql = 'WHERE category = ?';
         condition.binding = [requirement.category];
 
     } else if (requirement.keyword != null) {
 
-        if(requirement.filter != null){
-            if(requirement.filter === 'priceHToL'){
-                condition.orderby = 'ORDER BY `price` DESC ';
-            }else if(requirement.filter === 'priceLToH'){
-                condition.orderby = 'ORDER BY `price` ';
-            }
+        // if(requirement.filter != null){
+        //     if(requirement.filter === 'priceHToL'){
+        //         condition.orderby = 'ORDER BY `price` DESC ';
+        //     }else if(requirement.filter === 'priceLToH'){
+        //         condition.orderby = 'ORDER BY `price` ';
+        //     }
 
-        }
+        // }
         if(requirement.keyword === 'all'){
             condition.sql = 'WHERE title LIKE ?';
             condition.binding = ['%%'];
