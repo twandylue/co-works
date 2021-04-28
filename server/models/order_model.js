@@ -133,7 +133,14 @@ const checkStock = async (order) => {
     const info = [order.list[i].id, order.list[i].color.code, order.list[i].size];
     infoList.push(info);
     }
-    const stockList = await query('SELECT product_id, stock FROM variant WHERE (product_id, color_code, size) IN ?', [[infoList]]);
+    // trans
+    const stockList = await query('SELECT product_id, stock FROM variant WHERE (product_id, color_code, size) IN test ?', [[infoList]]);
+    // const stockList = await query('UPDATE product_id, stock FROM variant WHERE (product_id, color_code, size) IN ?', [[infoList]]);
+    // Update
+    // awiat SELECT
+    // taypay
+    // commit or rollback
+
     // console.log(stockList);
     const Status = [];
     for (const i in stockList) {
@@ -148,7 +155,7 @@ const checkStock = async (order) => {
         }
     }
     if (Status.length) {
-        // console.log(Status);
+        console.log(Status);
         return(Status);
     } else {
         return([]);
