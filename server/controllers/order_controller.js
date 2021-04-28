@@ -72,7 +72,8 @@ const getOrderHistory = async (req, res) => {
     };
 
     if (orderHistory === 0) {
-        res.status(500).send({message: 'Your order list is empty.'});
+        // res.status(500).send({message: 'Your order list is empty.'});
+        res.status(500).send(response);
         return;
     } else if (orderHistoryList.length) {
         res.status(200).send(response);

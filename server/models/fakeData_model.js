@@ -16,11 +16,12 @@ const updloadFakeData = async (req, res) => {
     //     const place = '台灣';
     //     const note = '實品顏色依單品照為主';
     //     const story = 'O.N.S is all about options, which is why we took our staple polo shirt and upgraded it with slubby linen jersey, making it even lighter for those who prefer their summer style extra-breezy.';
-    //     const images = a[i].image + ',' + a[i].image + ',' + a[i].image;
+    //     const images = a[i].image + '|' + a[i].image + '|' + a[i].image;
     //     // const images = a[i].image;
     //     const rating = 0;
-    //     const info = [a[i].id, a[i].category, a[i].title, description, parseInt(a[i].price), texture, wash, place, note, story, a[i].image, images, rating];
-    //     insertProduct.push(info); //
+    //     const price = getPurePrice(a[i].price);
+    //     const info = [a[i].id, a[i].category, a[i].title, description, price, texture, wash, place, note, story, a[i].image, images, rating];
+    //     insertProduct.push(info);
 
     //     const colors = [{code: 'FFFFFF', name: '白色'}, {code: 'DDFFBB', name: '亮綠'}, {code: 'CCCCCC', name: '淺灰'}, {code: 'DDF0FF', name: '淺藍'}, {code: '334455', name: '深藍'}, {code: 'BB7744', name: '淺棕'}, {code: 'FFDDDD', name: '粉紅'}];
     //     const sizes = ['S', 'M', 'L', 'XL'];
@@ -79,13 +80,12 @@ const updloadFakeData = async (req, res) => {
     //     }
     //     // insertVariant.push();
     // }
-    // // console.log(insertProduct);
+    // // console.log(insertProduct[237]);
     // // console.log(insertVariant);
-    // // console.log('test');
     // try {
     //     // await query('INSERT INTO product (id, category, title, description, price, texture, wash, place, note, story, main_image, images, rating) VALUES ?', [insertProduct]);
     //     // await query('INSERT INTO variant (color_code, color_name, size, stock, product_id) VALUES ?', [insertVariant]);
-    //     console.log('test');
+    //     // console.log('test');
     // } catch (err) {
     //     console.log(err);
     // }
@@ -93,6 +93,10 @@ const updloadFakeData = async (req, res) => {
     return;
 };
 
+function getPurePrice(price) {
+    const newPrice = price.replace(/,/g, '');
+    return parseInt(newPrice);
+}
 
 module.exports = {
     updloadFakeData
