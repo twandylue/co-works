@@ -133,37 +133,47 @@ const checkStock = async (order) => {
     const info = [order.list[i].id, order.list[i].color.code, order.list[i].size];
     infoList.push(info);
     }
-    // trans
     const stockList = await query('SELECT product_id, stock FROM variant WHERE (product_id, color_code, size) IN ?', [[infoList]]);
+
+
+    // trans
     const insert = [['CCCCCC', 'S', 1], ['FFFFFF', 'M', 2], ['FFDDDD', 'M', 3]];
-    // const test = await query('UPDATE for_test SET stock = ? WHERE (color_code, size, product_id) IN ?', [[[2, 2]], [insert]]);
-    const test = await query('UPDATE for_test SET stock = CASE (color_code, size, product_id) WHEN');
+    // await transaction();
+    const test = {};
+    // await query('UPDATE for_test SET stock = 1 WHERE (color_code, size, product_id) IN ?', [[[0]], [insert]]);
+    // test.update = await query('UPDATE for_test SET stock = stock - ? WHERE (color_code, size, product_id) IN ?', [[[0]], [insert]]);
+    // test.select = await query('SELECT product_id, stock FROM for_test WHERE (color_code, size, product_id) IN ?', [[insert]]);
+    // await commit();
+    // console.log('test');
     console.log(test);
     // Update
     // awiat SELECT
     // taypay
     // commit or rollback
 
+
+
+
     // console.log(stockList);
     // console.log('test');
-    const Status = [];
-    for (const i in stockList) {
-        if (order.list[i].qty > stockList[i].stock) {
-            const message = {
-                name: order.list[i].name,
-                size: order.list[i].size,
-                colorName: order.list[i].color.name,
-                condition: 'qty over stock',
-            };
-            Status.push(message);
-        }
-    }
-    if (Status.length) {
-        // console.log(Status);
-        return(Status);
-    } else {
-        return([]);
-    }
+    // const Status = [];
+    // for (const i in stockList) {
+    //     if (order.list[i].qty > stockList[i].stock) {
+    //         const message = {
+    //             name: order.list[i].name,
+    //             size: order.list[i].size,
+    //             colorName: order.list[i].color.name,
+    //             condition: 'qty over stock',
+    //         };
+    //         Status.push(message);
+    //     }
+    // }
+    // if (Status.length) {
+    //     // console.log(Status);
+    //     return(Status);
+    // } else {
+    //     return([]);
+    // }
 };
 
 module.exports = {
