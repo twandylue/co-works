@@ -134,14 +134,18 @@ const checkStock = async (order) => {
     infoList.push(info);
     }
     // trans
-    const stockList = await query('SELECT product_id, stock FROM variant WHERE (product_id, color_code, size) IN test ?', [[infoList]]);
-    // const stockList = await query('UPDATE product_id, stock FROM variant WHERE (product_id, color_code, size) IN ?', [[infoList]]);
+    const stockList = await query('SELECT product_id, stock FROM variant WHERE (product_id, color_code, size) IN ?', [[infoList]]);
+    const insert = [['CCCCCC', 'S', 1], ['FFFFFF', 'M', 2], ['FFDDDD', 'M', 3]];
+    // const test = await query('UPDATE for_test SET stock = ? WHERE (color_code, size, product_id) IN ?', [[[2, 2]], [insert]]);
+    const test = await query('UPDATE for_test SET stock = CASE (color_code, size, product_id) WHEN');
+    console.log(test);
     // Update
     // awiat SELECT
     // taypay
     // commit or rollback
 
     // console.log(stockList);
+    // console.log('test');
     const Status = [];
     for (const i in stockList) {
         if (order.list[i].qty > stockList[i].stock) {
@@ -155,7 +159,7 @@ const checkStock = async (order) => {
         }
     }
     if (Status.length) {
-        console.log(Status);
+        // console.log(Status);
         return(Status);
     } else {
         return([]);

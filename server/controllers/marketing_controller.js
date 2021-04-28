@@ -95,6 +95,23 @@ const getHots = async (req, res) => {
     const hots_with_detail = await Promise.all(hots.map(async (hot) => {
         const products = await Product.getHotProducts(hot.id);
         const products_with_detail = await getProductsWithDetail(req.protocol, req.hostname, products);
+        // console.log(products_with_detail);
+        const collectionList = req.collectionList;
+        if (req.userType === 0) {
+            for (const i in products_with_detail) { // 有更有效率的寫法!?
+                products_with_detail[i].status = 0;
+            }
+        } else {
+            for (const i in products_with_detail) { // 有更有效率的寫法!?
+                for (const j in collectionList) { // 有更有效率的寫法!?
+                    if (collectionList[j].product_id === products_with_detail[i].id) {
+                        products_with_detail[i].status = 1;
+                    } else if (!products_with_detail[i].status) {
+                        products_with_detail[i].status = 0;
+                    }
+                }
+            }
+        }
         return {
             title: hot.title,
             products: products_with_detail

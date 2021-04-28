@@ -45,6 +45,7 @@ const checkout = async (req, res) => {
         order_id: orderId,
         details: validator.blacklist(JSON.stringify(paymentResult), '<>')
     };
+    // decrease points
     await Order.updateOrderDetailsTable(req.user.email, number, orderRecord.time, data.order); // for test
     await Order.createPayment(payment);
     await Order.clearCart(req.user.email);
