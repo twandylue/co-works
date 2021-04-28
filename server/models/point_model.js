@@ -1,9 +1,13 @@
 const {transaction, commit, rollback, query} = require('./mysqlcon');
 
-const selectRecommend = async (productId) =>{
-    const command = {mysql:'', id: productId};
+const getPoint = async (email) =>{
+    const command = {mysql:'', id: email};
+
+    command.mysql = 'SELECT points FROM stylish.user WHERE email = ?';
 
     try {
+        const resule = await query(command.mysql, command.id);
+        return resule;
 
     } catch (error) {
         console.log(error);
@@ -14,8 +18,5 @@ const selectRecommend = async (productId) =>{
 
 
 module.exports = {
-    selectRecommend,
-    sendRecommendData,
-    profileRecommend,
-    searchApi
+    getPoint
 };
