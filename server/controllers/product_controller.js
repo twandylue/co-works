@@ -18,7 +18,7 @@ const createProduct = async (req, res) => {
         story: body.story
     };
     product.main_image = req.files.main_image[0].filename;
-    product.images = req.files.other_images.map(img => img.filename).join(','); // , => |
+    product.images = req.files.other_images.map(img => img.filename).join(',');
     const colorCodes = body.color_codes.split(',');
     const colorNames = body.color_names.split(',');
     const sizes = body.sizes.split(',');
@@ -145,11 +145,7 @@ const getProductsWithDetail = async (protocol, hostname, products) => {
     return products.map((p) => {
         const imagePath = util.getImagePath(protocol, hostname, p.id);
         p.main_image = p.main_image ? imagePath + p.main_image : null;
-        // p.images = p.images ? p.images.split(',').map(img => imagePath + img) : null; // , => |
-        // p.images = p.images ? p.images.split('|').map(img => imagePath + img) : null; // , => |
-        p.images = p.images.split('|').map(img => imagePath + img); // , => |
-
-        // console.log(p.images);
+        p.images = p.images ? p.images.split(',').map(img => imagePath + img) : null;
 
         const productVariants = variantsMap[p.id];
         if (!productVariants) { return p; }
