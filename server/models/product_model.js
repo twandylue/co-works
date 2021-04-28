@@ -16,15 +16,9 @@ const createProduct = async (product, variants) => {
 const getProducts = async (pageSize, paging = 0, requirement = {}) => {
     const condition = {sql: '', binding: [], orderby: ' ORDER BY id '};
     if (requirement.category) {
-        if(requirement.filter != null){
-            if(requirement.filter === 'priceHToL'){
-                condition.orderby = 'ORDER BY `price` DESC ';
-            }else if(requirement.filter === 'priceLToH'){
-                condition.orderby = 'ORDER BY `price` ';
-            }
-        }
         condition.sql = 'WHERE category = ?';
         condition.binding = [requirement.category];
+        console.log(condition.binding);
 
     } else if (requirement.keyword != null) {
 

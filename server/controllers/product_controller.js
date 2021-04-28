@@ -18,7 +18,7 @@ const createProduct = async (req, res) => {
         story: body.story
     };
     product.main_image = req.files.main_image[0].filename;
-    product.images = req.files.other_images.map(img => img.filename).join(',');
+    product.images = req.files.other_images.map(img => img.filename).join(','); // , => |
     const colorCodes = body.color_codes.split(',');
     const colorNames = body.color_names.split(',');
     const sizes = body.sizes.split(',');
@@ -43,17 +43,16 @@ const getProducts = async (req, res) => {
     const category = req.params.category;
     const paging = parseInt(req.query.paging) || 0;
     const collectionList = req.collectionList;
-    const filter = req.query.filter;
 
     async function findProduct(category) {
         switch (category) {
             case 'all':
                 return await Product.getProducts(pageSize, paging);
             case 'men': case 'women': case 'accessories':
-
-                return await Product.getProducts(pageSize, paging, {category, filter});
+                return await Product.getProducts(pageSize, paging, {category});
             case 'search': {
                 const keyword = req.query.keyword;
+                const filter = req.query.filter;
                 if (keyword) {
                     return await Product.getProducts(pageSize, paging, {keyword, filter});
                 }
@@ -145,7 +144,11 @@ const getProductsWithDetail = async (protocol, hostname, products) => {
     return products.map((p) => {
         const imagePath = util.getImagePath(protocol, hostname, p.id);
         p.main_image = p.main_image ? imagePath + p.main_image : null;
-        p.images = p.images ? p.images.split(',').map(img => imagePath + img) : null;
+        // p.images = p.images ? p.images.split(',').map(img => imagePath + img) : null; // , => |
+        // p.images = p.images ? p.images.split('|').map(img => imagePath + img) : null; // , => |
+        p.images = p.images.split('|').map(img => imagePath + img); // , => |
+
+        // console.log(p.images);
 
         const productVariants = variantsMap[p.id];
         if (!productVariants) { return p; }
