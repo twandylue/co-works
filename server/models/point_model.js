@@ -23,6 +23,27 @@ const getPoint = async (email, point) =>{
 };
 
 
+const selsectPoint = async (email) =>{
+    const command = {mysql:'', email: [email]};
+
+    command.mysql = 'SELECT * FROM user WHERE email = ?';
+
+    try {
+
+        const resule = await query(command.mysql, command.email);
+        const sort = JSON.parse(JSON.stringify(resule));
+        console.log(sort[0]);
+        return sort[0].points;
+
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+
+};
+
+
 module.exports = {
-    getPoint
+    getPoint,
+    selsectPoint
 };
