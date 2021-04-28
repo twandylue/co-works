@@ -18,20 +18,18 @@ const pushRecommend = async (req ,res) => {
 
     if(profile != null){
         const userEmail = req.user.email;
-        console.log(userEmail);
         let collectionData =  await getCollection(userEmail);
         collectionData = JSON.parse(JSON.stringify(collectionData));
         let collectionId = 400;
 
-
         if(collectionData[0] !== undefined){
+            const collectionLong = collectionData.length - 1;
+             collectionId = collectionData[collectionLong].product_id;
 
-            let collectionId = collectionData[0].product_id;
-            if(collectionId == undefined){
+            if(collectionId === undefined){
                 collectionId = 400;
             }
         }
-
         if(collectionId < 201800000000){
             const result = await profileRecommend(pageSize, paging, collectionId);
             let sort = JSON.parse(JSON.stringify(result));
