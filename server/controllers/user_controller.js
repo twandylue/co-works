@@ -146,8 +146,7 @@ const getUserProfileAndPoint = async (req, res) => {
             name: req.user.name,
             email: req.user.email,
             picture: req.user.picture,
-            points: info.points,
-            point: resule[0].points
+            points: resule[0].points,
         }
     });
     return;
