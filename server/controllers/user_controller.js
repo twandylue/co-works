@@ -1,6 +1,7 @@
 require('dotenv').config();
 const validator = require('validator');
 const User = require('../models/user_model');
+const {getPoint} = require('../models/point_model');
 const {getUserProfileInfo} = require('../models/profile_model');
 
 const signUp = async (req, res) => {
@@ -135,8 +136,26 @@ const getUserProfile = async (req, res) => {
     return;
 };
 
+
+const getUserProfileAndPoint = async (req, res) => {
+    const resule = await getPoint(req.user.email);
+    const info = await getUserProfileInfo(req.user.email);
+    res.status(200).send({
+        data: {
+            provider: req.user.provider,
+            name: req.user.name,
+            email: req.user.email,
+            picture: req.user.picture,
+            points: info.points,
+            point: resule[0].points
+        }
+    });
+    return;
+};
+
 module.exports = {
     signUp,
     signIn,
-    getUserProfile
+    getUserProfile,
+    getUserProfileAndPoint
 };

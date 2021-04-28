@@ -9,6 +9,7 @@ const {
     signUp,
     signIn,
     getUserProfile,
+    getUserProfileAndPoint
 } = require('../controllers/user_controller');
 
 const {
@@ -27,6 +28,9 @@ router.route('/user/signin')
 
 router.route('/user/profile')
     .get(authentication(), wrapAsync(getUserProfile));
+
+router.route('/user/profile/frontend')
+    .get(authentication(), wrapAsync(getUserProfileAndPoint));
 
 router.route('/user/orderhistory').get(authentication(USER_ROLE.ALL), wrapAsync(getOrderHistory));
 
