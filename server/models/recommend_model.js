@@ -20,7 +20,7 @@ const selectRecommend = async (productId) =>{
                     const data = {
                         id: sort[num].id,
                         title: sort[num].title,
-                        price: sort[num].price,
+                        price: +sort[num].price,
                         image: sort[num].main_image,
                         category: sort[num].category
                     };

@@ -35,7 +35,8 @@ app.use('/api/' + API_VERSION,
         require('./server/routes/collection_route'), // for collection
         require('./server/routes/rating_route'), // fot rating
         require('./server/routes/recommend_route'), // fot rating
-        require('./server/routes/point_route') // fot rating
+        require('./server/routes/point_route'), // fot rating
+        require('./server/routes/game_route') // fot rating
     ]
 );
 
