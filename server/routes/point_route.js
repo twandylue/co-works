@@ -9,7 +9,7 @@ const {
 
 
 router.route('/point')
-    .get(util.authentication(), wrapAsync(point));
+    .post(util.authentication(), wrapAsync(point));
 
 
 

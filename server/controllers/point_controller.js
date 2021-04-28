@@ -3,15 +3,13 @@ const { getPoint
 
 
 const point = async (req ,res) => {
-    const userEmail = await req.user.email;
-    console.log(userEmail);
-    const resule = await getPoint(userEmail) ;
+    const userPoint = req.body.point;
+    const userEmail = req.user.email;
 
-    const data = {
-        data:resule[0]
-    };
+    const resule = await getPoint(userEmail, userPoint) ;
 
-    res.send(data);
+
+    res.send('成功:D');
 };
 
 module.exports = {
