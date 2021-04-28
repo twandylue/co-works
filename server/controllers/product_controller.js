@@ -43,16 +43,17 @@ const getProducts = async (req, res) => {
     const category = req.params.category;
     const paging = parseInt(req.query.paging) || 0;
     const collectionList = req.collectionList;
+    const filter = req.query.filter;
 
     async function findProduct(category) {
         switch (category) {
             case 'all':
                 return await Product.getProducts(pageSize, paging);
             case 'men': case 'women': case 'accessories':
-                return await Product.getProducts(pageSize, paging, {category});
+
+                return await Product.getProducts(pageSize, paging, {category, filter});
             case 'search': {
                 const keyword = req.query.keyword;
-                const filter = req.query.filter;
                 if (keyword) {
                     return await Product.getProducts(pageSize, paging, {keyword, filter});
                 }
