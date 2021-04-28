@@ -85,11 +85,11 @@ const getHots = async (req, res) => {
         console.error(`Get hot cache error: ${e}`);
     }
 
-    if (cacheHots) {
-        console.log('Get hot from cache');
-        res.status(200).json({data: JSON.parse(cacheHots)});
-        return;
-    }
+    // if (cacheHots) {
+    //     console.log('Get hot from cache');
+    //     res.status(200).json({data: JSON.parse(cacheHots)});
+    //     return;
+    // }
 
     const hots = await Marketing.getHots();
     const hots_with_detail = await Promise.all(hots.map(async (hot) => {
